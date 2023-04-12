@@ -17,8 +17,9 @@ class _CandidatState extends State<Candidat> {
   var rooll;
   var emaill;
   UserModel loggedInUser = UserModel();
-
   _CandidatState({required this.id});
+  final CollectionReference posts = FirebaseFirestore.instance.collection('posts');
+
   @override
   void initState() {
     super.initState();
@@ -38,9 +39,6 @@ class _CandidatState extends State<Candidat> {
     });
   }
 
-  @override
-  final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('posts').snapshots();
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -58,63 +56,75 @@ class _CandidatState extends State<Candidat> {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: _usersStream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text("something is wrong");
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body:  Center(
+        child: StreamBuilder(
+          stream: posts.orderBy('offer name').snapshots(),
+          builder:(context,AsyncSnapshot snapshot){
+            if(snapshot.hasData){
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder:(context,index){
+                  final DocumentSnapshot offerSnap =snapshot.data.docs[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
 
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (_, index) {
-                return GestureDetector(
-                  onTap: () {},
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 4,
+                    child: Container(
+                      height:150 ,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                          boxShadow:[
+                            BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 10,
+                              spreadRadius: 15,
+
+                            ),]
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 3,
-                          right: 3,
-                        ),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(
-                              color: Colors.black,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                child: Image.network(offerSnap['images'],height:90,fit: BoxFit.cover ,width: 120,)
                             ),
                           ),
-                          title: Text(
-                            snapshot.data!.docChanges[index].doc['title'],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(offerSnap['offer name'],
+                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                              ),
+                              Text(offerSnap['salary'],
+                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                              Text(offerSnap['contrat'],
+                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                              Text(offerSnap['services'],
+                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                            ],
+
                           ),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 16,
+                          Row(
+                            children: [
+
+                              IconButton(onPressed: (){
+                              },
+                                icon: Icon(Icons.favorite_border),
+                                iconSize: 30,
+                                color: Colors.red,
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          );
-        },
+                        ],
+                      ) ,
+                    ),
+                  );
+                },);
+            }
+            return Container();
+          },
+        ),
       ),
     );
   }
