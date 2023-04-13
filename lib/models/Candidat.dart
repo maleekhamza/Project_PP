@@ -58,7 +58,7 @@ class _CandidatState extends State<Candidat> {
       ),
       body:  Center(
         child: StreamBuilder(
-          stream: posts.orderBy('offer name').snapshots(),
+          stream: posts.orderBy(FieldPath.documentId).snapshots(),
           builder:(context,AsyncSnapshot snapshot){
             if(snapshot.hasData){
               return ListView.builder(

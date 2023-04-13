@@ -84,100 +84,103 @@ class _addnoteState extends State<addnote> {
           backgroundColor: kPrimaryColor,
         ),
 
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                width: 300,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey)
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child:
-                        _image == null?
-                        Center(child: Text('no image selected')) :
-                        Image.file(
-                          _image! ,
-                          fit: BoxFit.fitWidth,),
-                      ),
-                      MaterialButton(
-                          onPressed: () {
-                        imagePicker();
-                      },
-                          child: Text("selected image"),
-                        textColor: Colors.white,
-                        color: kPrimaryColor,
-                       )
-                    ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+               Container(
+                  width: 300,
+                  height: 350,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.grey)
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                          Container(
+                            child: _image == null?
+                            Center(child: Text('no image selected')) :
+                            Image.file(
+                              _image! ,
+                              fit: BoxFit.fitWidth,),
+                          ),
+
+
+                        MaterialButton(
+                            onPressed: () {
+                          imagePicker();
+                        },
+                            child: Text("selected image"),
+                          textColor: Colors.white,
+                          color: kPrimaryColor,
+                         )
+                      ],
+                    ),
                   ),
                 ),
+              Padding(padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: title,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), label: Text("Offer Name")),
+                ),
               ),
-            ),
-            Padding(padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: title,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), label: Text("Offer Name")),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: Salary,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), label: Text("salary")),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: Contrat,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), label: Text("contrat")),
-              ),
-            ),
-            Padding(
+              Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField(
-                    decoration: InputDecoration(
-                        label: Text("Select Service")
-                    ),
-                    items: offerServices
-                        .map((e) =>
-                        DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                        .toList(),
-                    onChanged: (val) {
-                      SelectedServices = val as String?;
-                    })
-            ),
-            ElevatedButton(onPressed: () {
-              addOffer();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return HomePage();
-                  },
+                child: TextField(
+                  controller: Salary,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), label: Text("salary")),
                 ),
-              );
-            },
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.grey,)
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: Contrat,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), label: Text("contrat")),
                 ),
-                child: Text("Submit",
-                  style: TextStyle(fontSize: 20),
-                )
-            )
-          ],
+              ),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          label: Text("Select Service")
+                      ),
+                      items: offerServices
+                          .map((e) =>
+                          DropdownMenuItem(
+                            child: Text(e),
+                            value: e,
+                          ))
+                          .toList(),
+                      onChanged: (val) {
+                        SelectedServices = val as String?;
+                      })
+              ),
+              ElevatedButton(onPressed: () {
+                addOffer();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return HomePage();
+                    },
+                  ),
+                );
+              },
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.grey,)
+                  ),
+                  child: Text("Submit",
+                    style: TextStyle(fontSize: 20),
+                  )
+              )
+            ],
+          ),
         ),
 
       );
