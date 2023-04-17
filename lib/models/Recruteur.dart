@@ -133,6 +133,7 @@ class _RecruteurState extends State<Recruteur> {
                                         'salary': offerSnap['salary'],
                                         'contrat': offerSnap['contrat'],
                                         'services': offerSnap['services'],
+                                        'images': offerSnap['images'],
                                         'id':offerSnap.id,
                                       }
                                   );
