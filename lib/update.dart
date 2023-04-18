@@ -21,14 +21,20 @@ class _UpdateOfferState extends State<UpdateOffer> {
     'comptabilité',
     'Adminstration'
   ];
+  final typeContrat = [
+    'CDI',
+    'CDD',
+  ];
+
   String ? SelectedServices;
+  String ? SelectedContrat;
+
   File? _image ;
   final picker = ImagePicker();
   final CollectionReference offer = FirebaseFirestore.instance.collection(
       'posts');
   TextEditingController offerName = TextEditingController();
   TextEditingController offerSalary = TextEditingController();
-  TextEditingController offerContrat = TextEditingController();
   Future imagePicker() async {
     try {
       final pick = await picker.pickImage(source: ImageSource.gallery);
@@ -57,7 +63,7 @@ class _UpdateOfferState extends State<UpdateOffer> {
   final data ={
       'offer name':offerName.text,
       'salary':offerSalary.text,
-      'contrat':offerContrat.text,
+      'contrat':SelectedContrat,
       'services':SelectedServices,
       'images':imageurl
     };
@@ -71,7 +77,7 @@ class _UpdateOfferState extends State<UpdateOffer> {
         .arguments as Map;
     offerName.text = args['offer name'];
     offerSalary.text = args['salary'];
-    offerContrat.text = args['contrat'];
+    SelectedContrat = args['contrat'];
     SelectedServices = args['services'];
     final docId = args['id'];
 
@@ -82,7 +88,9 @@ class _UpdateOfferState extends State<UpdateOffer> {
         backgroundColor: kPrimaryColor,
       ),
       body: SingleChildScrollView(
+
         child: Column(
+
             children: [
               Container(
                 width: 300,
@@ -100,7 +108,9 @@ class _UpdateOfferState extends State<UpdateOffer> {
                         Center(child: Text('no image selected')) :
                         Image.file(
                           _image! ,
-                          fit: BoxFit.fitWidth,),
+                          width: 300,
+                          height: 300,
+                          ),
                       ),
 
                       MaterialButton(
@@ -115,7 +125,8 @@ class _UpdateOfferState extends State<UpdateOffer> {
                   ),
                 ),
               ),
-
+        SizedBox(
+          height: 20.0),
               Padding(padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: offerName,
@@ -133,11 +144,21 @@ class _UpdateOfferState extends State<UpdateOffer> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: offerContrat,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("contrat")),
-                ),
+                child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text("Select Type Contrat")
+                    ),
+                    items: typeContrat
+                        .map((e) =>
+                        DropdownMenuItem(
+                          child: Text(e),
+                          value: e,
+                        ))
+                        .toList(),
+                    onChanged: (val) {
+                      SelectedContrat = val as String?;
+                    })
               ),
               Padding(
                   padding: const EdgeInsets.all(8.0),
