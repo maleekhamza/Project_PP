@@ -180,6 +180,7 @@ class _addnoteState extends State<addnote> {
                         SelectedServices = val as String?;
                       })
               ),
+
               ElevatedButton(onPressed: () {
                 addOffer();
                 Navigator.push(
