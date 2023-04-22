@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
+import '../Screens/Drawer/drawer_screen.dart';
 import '../Screens/Login/login_screen.dart';
 import '../addpost.dart';
 import '../constants.dart';
@@ -72,7 +74,21 @@ class _RecruteurState extends State<Recruteur> {
             icon: Icon(Icons.logout),
           ),
         ],
-
+         leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const DrawerScreen()));
+            if (ZoomDrawer.of(context)!.isOpen()) {
+              ZoomDrawer.of(context)!.close();
+            } else {
+              ZoomDrawer.of(context)!.open();
+            }
+          },
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.white,
+          ),
+        ),
       ),
       body:  Center(
         child: StreamBuilder(
@@ -96,7 +112,6 @@ class _RecruteurState extends State<Recruteur> {
                               color: Colors.grey,
                               blurRadius: 10,
                               spreadRadius: 15,
-
                             ),]
                       ),
                       child: Row(

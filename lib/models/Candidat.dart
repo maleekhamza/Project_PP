@@ -1,6 +1,10 @@
+import 'package:chercher_job/Screens/Drawer/drawer_candidat.dart';
+import 'package:chercher_job/Screens/Drawer/menu_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import '../Screens/Drawer/drawer_screen.dart';
 import '../Screens/Login/login_screen.dart';
 import '../constants.dart';
 import 'model.dart';
@@ -55,6 +59,21 @@ class _CandidatState extends State<Candidat> {
             icon: Icon(Icons.logout),
           ),
         ],
+         leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const DrawerCandidat()));
+            if (ZoomDrawer.of(context)!.isOpen()) {
+              ZoomDrawer.of(context)!.close();
+            } else {
+              ZoomDrawer.of(context)!.open();
+            }
+          },
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.white,
+          ),
+        ),
       ),
       body:  Center(
         child: StreamBuilder(

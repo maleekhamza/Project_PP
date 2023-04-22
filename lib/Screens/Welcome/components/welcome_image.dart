@@ -13,7 +13,7 @@ class WelcomeImage extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "WELCOME TO Find Job App",
+          "WELCOME TO FIND JOB APP",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: defaultPadding * 2),

@@ -1,3 +1,4 @@
+import 'package:chercher_job/Screens/Drawer/drawer_screen.dart';
 import 'package:chercher_job/update.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
             ),
           )),
       home: const WelcomeScreen(),
+      
       routes: {
         '/update': (context)=> UpdateOffer(),
       },
