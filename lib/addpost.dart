@@ -27,15 +27,24 @@ class _addnoteState extends State<addnote> {
     'Adminstration'
   ];
 
+  final typeContrat = [
+    'CDI',
+    'CDD'
+  ];
+
   String ? SelectedServices;
+  String ? SelectedContrat;
+
 
   CollectionReference ref = FirebaseFirestore.instance.collection('posts');
 
   Future<void> addOffer() async {
     final  imageurl= await uploadImage(_image!);
+
     final data = {
       'offer name': title.text,
       'salary': Salary.text,
+      'contrat': SelectedContrat,
       'contrat': Contrat.text,
       'services': SelectedServices,
       'images':imageurl
@@ -86,8 +95,8 @@ class _addnoteState extends State<addnote> {
           child: Column(
             children: [
                Container(
-                  width: 300,
-                  height: 350,
+                 width: 300,
+                 height: 350,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: Colors.grey)
@@ -101,10 +110,9 @@ class _addnoteState extends State<addnote> {
                             Center(child: Text('no image selected')) :
                             Image.file(
                               _image! ,
-                              fit: BoxFit.fitWidth,),
+                              width: 300,
+                              height: 300,),
                           ),
-
-
                         MaterialButton(
                             onPressed: () {
                           imagePicker();
@@ -117,6 +125,8 @@ class _addnoteState extends State<addnote> {
                     ),
                   ),
                 ),
+              SizedBox(
+                  height: 20.0),
               Padding(padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: title,
@@ -132,19 +142,30 @@ class _addnoteState extends State<addnote> {
                       border: OutlineInputBorder(), label: Text("salary")),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: Contrat,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("contrat")),
-                ),
-              ),
+
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: DropdownButtonFormField(
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
+                          label: Text("Select Type Contrat")
+                      ),
+                      items: typeContrat
+                          .map((e) =>
+                          DropdownMenuItem(
+                            child: Text(e),
+                            value: e,
+                          ))
+                          .toList(),
+                      onChanged: (val) {
+                        SelectedContrat = val as String?;
+                      })
+              ),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:  DropdownButtonFormField(
+                      value: SelectedServices,
+                      decoration: InputDecoration(
                           label: Text("Select Service")
                       ),
                       items: offerServices
@@ -158,6 +179,7 @@ class _addnoteState extends State<addnote> {
                         SelectedServices = val as String?;
                       })
               ),
+
               ElevatedButton(onPressed: () {
                 addOffer();
                 Navigator.push(

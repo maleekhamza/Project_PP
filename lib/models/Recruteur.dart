@@ -1,3 +1,4 @@
+import 'package:chercher_job/detailsOffer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import '../constants.dart';
 import 'model.dart';
 
 class Recruteur extends StatefulWidget {
-
   String id;
   Recruteur({required this.id});
   @override
@@ -23,11 +23,13 @@ class _RecruteurState extends State<Recruteur> {
   var emaill;
   UserModel loggedInUser = UserModel();
   _RecruteurState({required this.id});
-  final CollectionReference posts = FirebaseFirestore.instance.collection('posts');
+  final CollectionReference posts =
+      FirebaseFirestore.instance.collection('posts');
 
   void deleteOffer(docId) {
     posts.doc(docId).delete();
   }
+
   @override
   void initState() {
     super.initState();
@@ -51,14 +53,12 @@ class _RecruteurState extends State<Recruteur> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          backgroundColor: kPrimaryColor,
+        backgroundColor: kPrimaryColor,
         onPressed: () {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) =>addnote()));
+              context, MaterialPageRoute(builder: (_) => addnote()));
         },
-        child: Icon(
-          Icons.add
-        ),
+        child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
@@ -90,86 +90,119 @@ class _RecruteurState extends State<Recruteur> {
           ),
         ),
       ),
-      body:  Center(
+      body: Center(
         child: StreamBuilder(
           stream: posts.orderBy(FieldPath.documentId).snapshots(),
-          builder:(context,AsyncSnapshot snapshot){
-            if(snapshot.hasData){
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
-                itemBuilder:(context,index){
-                  final DocumentSnapshot offerSnap =snapshot.data.docs[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-
-                    child: Container(
-                      height:150 ,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                          boxShadow:[
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 10,
-                              spreadRadius: 15,
-                            ),]
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              child: Image.network(offerSnap['images'],height:90,fit: BoxFit.cover ,width: 120,)
+                itemBuilder: (context, index) {
+                  final DocumentSnapshot offerSnap = snapshot.data.docs[index];
+                  return Column(
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => detailsOffer()),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            height: 150,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 10,
+                                    spreadRadius: 15,
+                                  ),
+                                ]),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                      child: Image.network(
+                                    offerSnap['images'],
+                                    height: 90,
+                                    fit: BoxFit.cover,
+                                    width: 120,
+                                  )),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      offerSnap['offer name'],
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      offerSnap['salary'],
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      offerSnap['contrat'],
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      offerSnap['services'],
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(context, '/update',
+                                            arguments: {
+                                              'offer name':
+                                                  offerSnap['offer name'],
+                                              'salary': offerSnap['salary'],
+                                              'contrat': offerSnap['contrat'],
+                                              'services': offerSnap['services'],
+                                              'images': offerSnap['images'],
+                                              'id': offerSnap.id,
+                                            });
+                                      },
+                                      icon: Icon(Icons.edit),
+                                      iconSize: 30,
+                                      color: Colors.blue,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        deleteOffer(offerSnap.id);
+                                      },
+                                      icon: Icon(Icons.delete),
+                                      iconSize: 30,
+                                      color: Colors.red,
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(offerSnap['offer name'],
-                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
-                              ),
-                              Text(offerSnap['salary'],
-                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                              Text(offerSnap['contrat'],
-                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                              Text(offerSnap['services'],
-                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                            ],
-
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: (){
-                                  Navigator.pushNamed(context, '/update',
-                                      arguments:{
-                                        'offer name': offerSnap['offer name'],
-                                        'salary': offerSnap['salary'],
-                                        'contrat': offerSnap['contrat'],
-                                        'services': offerSnap['services'],
-                                        'id':offerSnap.id,
-                                      }
-                                  );
-                                },
-                                icon: Icon(Icons.edit),
-                                iconSize: 30,
-                                color: Colors.blue,
-                              ),
-                              IconButton(onPressed: (){
-                                deleteOffer(offerSnap.id);
-                              },
-                                icon: Icon(Icons.delete),
-                                iconSize: 30,
-                                color: Colors.red,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ) ,
-                    ),
+                        ),
+                      ),
+                    ],
                   );
-                },);
+                },
+              );
             }
             return Container();
           },
@@ -177,7 +210,6 @@ class _RecruteurState extends State<Recruteur> {
       ),
     );
   }
-
 
   Future<void> logout(BuildContext context) async {
     CircularProgressIndicator();
