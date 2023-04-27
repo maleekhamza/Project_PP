@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:chercher_job/main.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,11 +21,32 @@ class ProfileRecruteur extends StatefulWidget {
 }
 
 class _ProfileRecruteurState extends State<ProfileRecruteur> {
+  String? imageurl;
+  XFile? imgXFile;
+  final ImagePicker imagePicker = ImagePicker();
+  getImageFromGallery() async {
+    imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      imgXFile;
+    });
+  }
+
+  Future uploadImage(File imgXFile) async{
+    String url;
+    String imgId=DateTime.now().microsecondsSinceEpoch.toString();
+  Reference reference=  FirebaseStorage.instance.ref().child('image').child('ProfileRecruteur$imgId');
+  await reference.putFile(imgXFile);
+  url=await reference.getDownloadURL();
+  return url;
+  }
+
   final firstName = TextEditingController();
   final lastName = TextEditingController();
   final date = TextEditingController();
   final phone = TextEditingController();
   final email = TextEditingController();
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,19 +70,25 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                 TextFormField(
                   controller: firstName,
                   decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF6F35A5),),
-                  borderRadius: BorderRadius.circular(10),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF6F35A5),),
-                  borderRadius: BorderRadius.circular(10),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  prefixIcon:Icon(Icons.person),
-                  labelText: 'first name',
-                  labelStyle: TextStyle(color:Color(0xFF6F35A5), ),
-                  filled: true,
-                 ),
+                    prefixIcon: Icon(Icons.person),
+                    labelText: 'first name',
+                    labelStyle: TextStyle(
+                      color: Color(0xFF6F35A5),
+                    ),
+                    filled: true,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "*Required";
@@ -71,19 +102,25 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                 TextFormField(
                   controller: lastName,
                   decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF6F35A5),),
-                  borderRadius: BorderRadius.circular(10),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF6F35A5),),
-                  borderRadius: BorderRadius.circular(10),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  prefixIcon:Icon(Icons.person),
-                  labelText: 'last name',
-                  labelStyle: TextStyle(color:Color(0xFF6F35A5), ),
-                  filled: true,
-              ),
+                    prefixIcon: Icon(Icons.person),
+                    labelText: 'last name',
+                    labelStyle: TextStyle(
+                      color: Color(0xFF6F35A5),
+                    ),
+                    filled: true,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "*Required";
@@ -99,19 +136,25 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF6F35A5),),
-                  borderRadius: BorderRadius.circular(10.0),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF6F35A5),),
-                   borderRadius: BorderRadius.circular(10.0),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  prefixIcon:Icon(Icons.email_rounded),
-                  labelText: 'Your Email',
-                  labelStyle: TextStyle(color:Color(0xFF6F35A5), ),
-                  filled: true,                  
-              ),
+                    prefixIcon: Icon(Icons.email_rounded),
+                    labelText: 'Your Email',
+                    labelStyle: TextStyle(
+                      color: Color(0xFF6F35A5),
+                    ),
+                    filled: true,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "*Required";
@@ -119,52 +162,80 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                     return null;
                   },
                 ),
-                SizedBox(height: 30,),
+                SizedBox(
+                  height: 30,
+                ),
                 ElevatedButton(
-                  style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  )),
+                    style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    )),
                     onPressed: () {
-                      CollectionReference collRef =
-                          FirebaseFirestore.instance.collection('ProfileRecruteur');
-                      collRef.add({
-                        'firstName':firstName.text,
-                        'lastName': lastName.text,
-                        'Email':email.text,
-                        });
+                      saveData();
                     },
+                    /*async {
+                      CollectionReference collRef = FirebaseFirestore.instance
+                          .collection('ProfileRecruteur');
+                      collRef.add({
+                        'image': imageurl,
+                        'firstName': firstName.text,
+                        'lastName': lastName.text,
+                        'Email': email.text,
+                      });
+                    },*/
                     child: Text("Save")),
-                    
               ],
             ),
           ),
         ));
   }
-}
 
-Widget imageProfile() {
-  return Center(
-    child: Stack(
-      children: <Widget>[
-        CircleAvatar(
-          radius: 80.0,
-          backgroundImage: AssetImage("assets/images/profil.jpg"),
-        ),
-        Positioned(
-          bottom: 20.0,
-          right: 20.0,
-          child: InkWell(
-            onTap: () {
-              var context;
-              showModalBottomSheet(
-                  context: context, builder: (BuildContext) => bottomSheet());
-            },
-            child: Icon(Icons.camera_alt, color: Colors.blueAccent, size: 28.0),
+  CollectionReference collRef =
+      FirebaseFirestore.instance.collection('ProfileRecruteur');
+  Future<void> saveData() async {
+    //final imageurl = await uploadImage(imgXFile! as File);
+
+    final data = {
+      'image': imageurl,
+      'firstName': firstName.text,
+      'lastName': lastName.text,
+      'Email': email.text,
+    };
+    collRef.add(data).then((value) => Navigator.pop(context));
+  }
+
+  Widget imageProfile() {
+    return Center(
+      child: Stack(
+        children: <Widget>[
+          CircleAvatar(
+              radius: 80.0,
+              //backgroundImage: AssetImage("assets/images/profil.jpg"),
+              backgroundImage: imgXFile == null
+                  ? null
+                  : FileImage(
+                      File(imgXFile!.path),
+                    )),
+          Positioned(
+            bottom: 20.0,
+            right: 20.0,
+            child: InkWell(
+              onTap: () {
+                /*var context;
+                showModalBottomSheet(
+                    context: context, builder: (context) => bottomSheet(context));*/
+                getImageFromGallery();
+              },
+              child: Icon(Icons.camera_alt,
+                  color: Color.fromARGB(255, 161, 91, 157), size: 28.0),
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 Widget bottomSheet() {

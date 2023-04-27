@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../../main.dart';
 import '../isCompleted.dart';
 
@@ -21,6 +23,7 @@ class MultiSelect extends StatefulWidget {
 }
 
 class _MultiSelectState extends State<MultiSelect> {
+  
   final List<String> _selectedItems = [];
 
   void _itemChange(String itemValue, bool isSelected) {
@@ -79,6 +82,29 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyProfile> {
+  //import image
+  XFile? imgXFile;
+  final ImagePicker imagePicker = ImagePicker();
+  getImageFromGallery() async {
+    imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      imgXFile;
+    });
+  }
+
+  Future uploadImage(File imgXFile) async {
+    String imageurl;
+    String imgId = DateTime.now().microsecondsSinceEpoch.toString();
+    
+    Reference reference = FirebaseStorage.instance
+        .ref()
+        .child('images')
+        .child('ProfileCandidatS1$imgId');
+    await reference.putFile(imgXFile);
+     imageurl = await reference.getDownloadURL();
+    return  imageurl;
+  }
+
   List<String> _selectedItems = [];
   //checkbox
   void _showMultiSelect() async {
@@ -131,7 +157,7 @@ class _MyWidgetState extends State<MyProfile> {
     "Science de l'informatique"
   ];*/
   //var experienceList = ["Sans experience", "entre 1 et 4ans", ">5ans"];
- /* final skillsList = [
+  /* final skillsList = [
     "Android",
     "flutter",
     "Kotlin",
@@ -163,13 +189,11 @@ class _MyWidgetState extends State<MyProfile> {
   var selectedFieldsStudy;
   var selectedDegree;
   var selectedExperience;
-
+  String? imageurl;
   void initState() {
     super.initState();
     date.text = '';
   }
-
-  
 
   get formKey => null;
   @override
@@ -184,20 +208,25 @@ class _MyWidgetState extends State<MyProfile> {
       body: isCompleted
           ? buildCompleted()
           : Form(
-              key: formKey,    
+              key: formKey,
               child: Theme(
-                data: ThemeData(colorScheme: ColorScheme.light(primary: Color.fromARGB(255, 172, 131, 189))),
+                data: ThemeData(
+                    colorScheme: ColorScheme.light(
+                        primary: Color.fromARGB(255, 172, 131, 189))),
                 child: Stepper(
                   type: StepperType.horizontal,
                   steps: getSteps(),
                   currentStep: currentStep,
-                  onStepContinue: () {
+                  onStepContinue: () async {
                     final isLastStep = currentStep == getSteps().length - 1;
+                    //final  imageurl= await uploadImage(imgXFile! as File);
                     if (currentStep == 0) {
-                      CollectionReference collection = FirebaseFirestore.instance
+                      CollectionReference collection = FirebaseFirestore
+                          .instance
                           .collection('ProfileCandidatS1');
+
                       collection.add({
-                        
+                        'images': imageurl,
                         'firstName': firstName.text,
                         'lastName': lastName.text,
                         'date': date.text,
@@ -205,22 +234,23 @@ class _MyWidgetState extends State<MyProfile> {
                         'phone': phone.text,
                       });
                     } else if (currentStep == 1) {
-                      CollectionReference collection = FirebaseFirestore.instance
+                      CollectionReference collection = FirebaseFirestore
+                          .instance
                           .collection('ProfileCandidatS2');
                       collection.add({
                         'university': NameofUniversity.text,
                         'diploma': NameofDipolme.text,
-                        'FieldOfStudy':selectedFieldsStudy,
-                        'DegreeOfStudy':selectedDegree,
+                        'FieldOfStudy': selectedFieldsStudy,
+                        'DegreeOfStudy': selectedDegree,
                       });
                     } else if (currentStep == 2) {
-                      CollectionReference collection = FirebaseFirestore.instance
+                      CollectionReference collection = FirebaseFirestore
+                          .instance
                           .collection('ProfileCandidatS3');
                       collection.add({
-                        'experience':selectedExperience,
+                        'experience': selectedExperience,
                         'certification': Certification.text,
                         'language': Languages.text,
-                        
                         'centreofInterest': CentreOfInterest.text,
                       });
                     }
@@ -232,7 +262,7 @@ class _MyWidgetState extends State<MyProfile> {
                       setState(() {
                         currentStep += 1;
                       });
-              
+
                       //formKey.currentState!.validate();
                       //bool isDetailValid = isDetailComplete();
                       // if (isDetailValid) {
@@ -247,21 +277,20 @@ class _MyWidgetState extends State<MyProfile> {
                       // }
                     }
                   },
-                  
                   onStepTapped: (step) {
                     setState(() {
                       currentStep = step;
                     });
                   },
-                  
                   onStepCancel: currentStep == 0
                       ? null
                       : () => setState(() => currentStep -= 1),
                 ),
               ),
-          ),
+            ),
     );
   }
+
   bool isDetailComplete() {
     if (currentStep == 0) {
       if (firstName.text.isEmpty ||
@@ -293,7 +322,6 @@ class _MyWidgetState extends State<MyProfile> {
 
 ////////////////////Profile_Stepper///////////////////
   List<Step> getSteps() => [
-    
         ////////Step1/////////
         Step(
           state: currentStep > 0 ? StepState.complete : StepState.indexed,
@@ -742,16 +770,17 @@ class _MyWidgetState extends State<MyProfile> {
                     }
                     return Text("No widget to build");
                   }),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
 
               //************* CV ***********/
               Container(
                 width: 700.0,
                 height: 100.0,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color.fromARGB(255, 228, 211, 236)
-                ),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color.fromARGB(255, 228, 211, 236)),
                 padding: EdgeInsets.all(32),
                 child: ElevatedButton(
                   onPressed: () async {
@@ -769,9 +798,8 @@ class _MyWidgetState extends State<MyProfile> {
                 width: 700.0,
                 height: 100.0,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color.fromARGB(255, 228, 211, 236)
-                ),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color.fromARGB(255, 228, 211, 236)),
                 padding: EdgeInsets.all(32),
                 child: ElevatedButton(
                   onPressed: _showSkillSelect,
@@ -793,9 +821,8 @@ class _MyWidgetState extends State<MyProfile> {
                 width: 700.0,
                 height: 100.0,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color.fromARGB(255, 228, 211, 236)
-                ),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color.fromARGB(255, 228, 211, 236)),
                 padding: EdgeInsets.all(32),
                 child: ElevatedButton(
                   onPressed: _showMultiSelect,
@@ -816,54 +843,52 @@ class _MyWidgetState extends State<MyProfile> {
               TextFormField(
                 controller: Certification,
                 decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    prefixIcon: Icon(Icons.school),
+                    labelText: 'Certification Name',
+                    labelStyle: TextStyle(
                       color: Color(0xFF6F35A5),
                     ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFF6F35A5),
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  prefixIcon: Icon(Icons.school),
-                  labelText: 'Certification Name',
-                  labelStyle: TextStyle(
-                    color: Color(0xFF6F35A5),
-                  ),
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 228, 211, 236)
-                ),
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 228, 211, 236)),
               ),
               SizedBox(
                 height: 20,
               ),
-           
+
               TextFormField(
                 controller: CentreOfInterest,
                 decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFF6F35A5),
+                      ),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    prefixIcon: Icon(Icons.music_note),
+                    labelText: 'Center of interest',
+                    labelStyle: TextStyle(
                       color: Color(0xFF6F35A5),
                     ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFF6F35A5),
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  prefixIcon: Icon(Icons.music_note),
-                  labelText: 'Center of interest',
-                  labelStyle: TextStyle(
-                    color: Color(0xFF6F35A5),
-                  ),
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 228, 211, 236)
-                ),
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 228, 211, 236)),
               ),
             ],
           ),
@@ -883,20 +908,25 @@ class _MyWidgetState extends State<MyProfile> {
       child: Stack(
         children: <Widget>[
           CircleAvatar(
-            radius: 80.0,
-            backgroundImage: AssetImage("assets/images/profil.jpg"),
-          ),
+              radius: 80.0,
+              //backgroundImage: AssetImage("assets/images/profil.jpg"),
+              backgroundImage: imgXFile == null
+                  ? null
+                  : FileImage(
+                      File(imgXFile!.path),
+                    )),
           Positioned(
             bottom: 20.0,
             right: 20.0,
             child: InkWell(
               onTap: () {
-                var context;
+                /*var context;
                 showModalBottomSheet(
-                    context: context, builder: (context) => bottomSheet(context));
+                    context: context, builder: (context) => bottomSheet(context));*/
+                getImageFromGallery();
               },
-              child:
-                  Icon(Icons.camera_alt, color: Color.fromARGB(255, 161, 91, 157), size: 28.0),
+              child: Icon(Icons.camera_alt,
+                  color: Color.fromARGB(255, 161, 91, 157), size: 28.0),
             ),
           ),
         ],

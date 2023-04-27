@@ -2,6 +2,7 @@
 import 'package:chercher_job/Screens/Drawer/profilScreen.dart';
 import 'package:chercher_job/Screens/Drawer/profile_recruteur.dart';
 import 'package:chercher_job/constants.dart';
+import 'package:chercher_job/models/Recruteur.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../constants.dart';
@@ -69,7 +70,7 @@ class _MenuRecruteurState extends State<MenuRecruteur> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const MainScreen()));
+                        builder: (context) =>  Recruteur(id: 'id')));
                   },
                 ),
               ),

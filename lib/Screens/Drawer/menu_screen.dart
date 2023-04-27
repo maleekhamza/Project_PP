@@ -1,5 +1,6 @@
 
 import 'package:chercher_job/Screens/Drawer/profilScreen.dart';
+import 'package:chercher_job/Screens/Drawer/profile_recruteur.dart';
 import 'package:chercher_job/constants.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
@@ -35,6 +36,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   children: [
                     CircleAvatar(
                       backgroundColor: Colors.white,
+                      
                       maxRadius: 35,
                     ),
                     SizedBox(
