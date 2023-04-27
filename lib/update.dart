@@ -35,6 +35,10 @@ class _UpdateOfferState extends State<UpdateOffer> {
       'posts');
   TextEditingController offerName = TextEditingController();
   TextEditingController offerSalary = TextEditingController();
+  TextEditingController offerLocation = TextEditingController();
+  TextEditingController offerDescription = TextEditingController();
+
+
   Future imagePicker() async {
     try {
       final pick = await picker.pickImage(source: ImageSource.gallery);
@@ -65,6 +69,8 @@ class _UpdateOfferState extends State<UpdateOffer> {
       'salary':offerSalary.text,
       'contrat':SelectedContrat,
       'services':SelectedServices,
+       'Location':offerLocation.text,
+      'Description':offerDescription.text,
       'images':imageurl
     };
     offer.doc(docId).update(data).then((value) => Navigator.pop(context));
@@ -79,6 +85,8 @@ class _UpdateOfferState extends State<UpdateOffer> {
     offerSalary.text = args['salary'];
     SelectedContrat = args['contrat'];
     SelectedServices = args['services'];
+    offerLocation.text=args['Location'];
+    offerDescription.text=args['Description'];
     final docId = args['id'];
 
 
@@ -178,6 +186,22 @@ class _UpdateOfferState extends State<UpdateOffer> {
                         SelectedServices = val as String?;
                       })
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: offerLocation,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), label: Text("Adress")),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: offerDescription,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), label: Text("Description")),
+                ),
+              ),
               ElevatedButton(onPressed: () {
                 updateOffer(docId);
               },
@@ -189,7 +213,9 @@ class _UpdateOfferState extends State<UpdateOffer> {
                   ),
                   child: Text("Update",
                     style: TextStyle(fontSize: 20),
-                  ))
+                  )),
+              SizedBox(height: 12,),
+
             ],
           ),
         ),
