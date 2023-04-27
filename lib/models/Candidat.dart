@@ -7,6 +7,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import '../Screens/Drawer/drawer_screen.dart';
 import '../Screens/Login/login_screen.dart';
 import '../constants.dart';
+import '../detailsOffer.dart';
 import 'model.dart';
 
 class Candidat extends StatefulWidget {
@@ -84,60 +85,73 @@ class _CandidatState extends State<Candidat> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder:(context,index){
                   final DocumentSnapshot offerSnap =snapshot.data.docs[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
+                  return Column(
+                    children: <Widget>[
+                      InkWell(
+                      onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => detailsOffer(offerSnap:offerSnap)),
+                    );
+                  },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
 
-                    child: Container(
-                      height:150 ,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                          boxShadow:[
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 10,
-                              spreadRadius: 15,
+                        child: Container(
+                          height:150 ,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                              boxShadow:[
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 10,
+                                  spreadRadius: 15,
 
-                            ),]
+                                ),]
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                    child: Image.network(offerSnap['images'],height:90,fit: BoxFit.cover ,width: 120,)
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(offerSnap['offer name'],
+                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(offerSnap['salary'],
+                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                                  Text(offerSnap['contrat'],
+                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                                  Text(offerSnap['services'],
+                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                                ],
+
+                              ),
+                              Row(
+                                children: [
+
+                                  IconButton(onPressed: (){
+                                  },
+                                    icon: Icon(Icons.favorite_border),
+                                    iconSize: 30,
+                                    color: Colors.red,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ) ,
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                                child: Image.network(offerSnap['images'],height:90,fit: BoxFit.cover ,width: 120,)
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(offerSnap['offer name'],
-                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
-                              ),
-                              Text(offerSnap['salary'],
-                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                              Text(offerSnap['contrat'],
-                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                              Text(offerSnap['services'],
-                                style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                            ],
-
-                          ),
-                          Row(
-                            children: [
-
-                              IconButton(onPressed: (){
-                              },
-                                icon: Icon(Icons.favorite_border),
-                                iconSize: 30,
-                                color: Colors.red,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ) ,
-                    ),
+                      ),
+                    ],
                   );
                 },);
             }

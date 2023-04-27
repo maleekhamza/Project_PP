@@ -92,7 +92,7 @@ class _RecruteurState extends State<Recruteur> {
       ),
       body: Center(
         child: StreamBuilder(
-          stream: posts.orderBy(FieldPath.documentId).snapshots(),
+          stream: posts.snapshots(),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
@@ -106,7 +106,7 @@ class _RecruteurState extends State<Recruteur> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => detailsOffer()),
+                                builder: (context) => detailsOffer(offerSnap:offerSnap)),
                           );
                         },
                         child: Padding(
@@ -139,11 +139,13 @@ class _RecruteurState extends State<Recruteur> {
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+
                                     Text(
                                       offerSnap['offer name'],
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
+
                                     ),
                                     Text(
                                       offerSnap['salary'],
@@ -171,12 +173,14 @@ class _RecruteurState extends State<Recruteur> {
                                       onPressed: () {
                                         Navigator.pushNamed(context, '/update',
                                             arguments: {
-                                              'offer name':
-                                                  offerSnap['offer name'],
+                                              'offer name': offerSnap['offer name'],
                                               'salary': offerSnap['salary'],
                                               'contrat': offerSnap['contrat'],
                                               'services': offerSnap['services'],
                                               'images': offerSnap['images'],
+                                              'services': offerSnap['services'],
+                                              'Location': offerSnap['Location'],
+                                              'Description': offerSnap['Description'],
                                               'id': offerSnap.id,
                                             });
                                       },

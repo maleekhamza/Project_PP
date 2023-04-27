@@ -18,6 +18,8 @@ class _addnoteState extends State<addnote> {
   TextEditingController Salary = TextEditingController();
 
   TextEditingController Contrat = TextEditingController();
+  TextEditingController Description = TextEditingController();
+  TextEditingController Location = TextEditingController();
 
   final offerServices = [
     'Informatique',
@@ -45,7 +47,8 @@ class _addnoteState extends State<addnote> {
       'offer name': title.text,
       'salary': Salary.text,
       'contrat': SelectedContrat,
-      'contrat': Contrat.text,
+      'Description': Description.text,
+      'Location': Location.text,
       'services': SelectedServices,
       'images':imageurl
     };
@@ -179,7 +182,23 @@ class _addnoteState extends State<addnote> {
                         SelectedServices = val as String?;
                       })
               ),
-
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: Location,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), label: Text("Location")),
+                ),
+              ),
+              Container(
+                width: 500,
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: Description,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), label: Text("Description")),
+                ),
+              ),
               ElevatedButton(onPressed: () {
                 addOffer();
                 Navigator.push(
@@ -198,7 +217,8 @@ class _addnoteState extends State<addnote> {
                   child: Text("Submit",
                     style: TextStyle(fontSize: 20),
                   )
-              )
+              ),
+              SizedBox(height: 12,),
             ],
           ),
         ),
