@@ -37,6 +37,7 @@ class _addnoteState extends State<addnote> {
   String ? SelectedServices;
   String ? SelectedContrat;
 
+  // build the path dynamically
 
   CollectionReference ref = FirebaseFirestore.instance.collection('posts');
 
@@ -131,26 +132,87 @@ class _addnoteState extends State<addnote> {
               SizedBox(
                   height: 20.0),
               Padding(padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: title,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("Offer Name")),
+                child:  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Offer Name',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                        fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    TextFormField(
+                      controller: title,
+                      decoration: InputDecoration(
+                        hintText: 'Offer Name',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 14,
+
+                        ),
+                        filled: true, // ajouter un fond rempli de couleur
+                        fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
+                        border: OutlineInputBorder( // définir une bordure de rectangle
+                          borderRadius: BorderRadius.circular(8.0), // personnaliser le rayon des coins du rectangle
+                          borderSide: BorderSide.none, // supprimer la bordure de ligne
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the Offer Name !';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: Salary,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("salary")),
-                ),
+          Padding(padding: const EdgeInsets.all(8.0),
+            child:
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Salary',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  TextFormField(
+                    controller: Salary,
+                    decoration: InputDecoration(
+                      hintText: 'Salary',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontSize: 14,
+
+                      ),
+                      filled: true, // ajouter un fond rempli de couleur
+                      fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
+                      border: OutlineInputBorder( // définir une bordure de rectangle
+                        borderRadius: BorderRadius.circular(8.0), // personnaliser le rayon des coins du rectangle
+                        borderSide: BorderSide.none, // supprimer la bordure de ligne
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the Salary !';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
               ),
+          ),
 
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: DropdownButtonFormField(
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
                           label: Text("Select Type Contrat")
                       ),
                       items: typeContrat
@@ -182,23 +244,89 @@ class _addnoteState extends State<addnote> {
                         SelectedServices = val as String?;
                       })
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: Location,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("Location")),
-                ),
+          Padding(padding: const EdgeInsets.all(8.0),
+            child:
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Location',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  TextFormField(
+                    controller: Location,
+                    decoration: InputDecoration(
+                      hintText: 'Location',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontSize: 14,
+
+                      ),
+                      filled: true, // ajouter un fond rempli de couleur
+                      fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
+                      border: OutlineInputBorder( // définir une bordure de rectangle
+                        borderRadius: BorderRadius.circular(8.0), // personnaliser le rayon des coins du rectangle
+                        borderSide: BorderSide.none, // supprimer la bordure de ligne
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the Location !';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
               ),
-              Container(
-                width: 500,
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: Description,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("Description")),
-                ),
+          ),
+              SizedBox(height: 18),
+          Padding(padding: const EdgeInsets.all(8.0),
+            child:
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Description',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  // définir la hauteur souhaitée du TextFormField
+                  TextFormField(
+                    controller: Description,
+                    decoration: InputDecoration(
+
+                      contentPadding: EdgeInsets.symmetric(vertical: 55.0), // définir la marge interne de la zone de saisie
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                        fontSize: 14,
+                      ),
+                      filled: true, // ajouter un fond rempli de couleur
+                      fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
+                      border: OutlineInputBorder( // définir une bordure de rectangle
+                        borderRadius: BorderRadius.circular(8.0), // personnaliser le rayon des coins du rectangle
+                        borderSide: BorderSide.none, // supprimer la bordure de ligne
+                      ),
+                    ),
+                    maxLines: null, // permet à l'utilisateur d'écrire autant de lignes qu'il souhaite
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the event description';
+                      }
+                      return null;
+                    },
+                  ),
+
+                ],
               ),
+          ),
+          SizedBox(height: 18),
               ElevatedButton(onPressed: () {
                 addOffer();
                 Navigator.push(
@@ -212,7 +340,7 @@ class _addnoteState extends State<addnote> {
               },
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                        Colors.grey,)
+                        kPrimaryColor,)
                   ),
                   child: Text("Submit",
                     style: TextStyle(fontSize: 20),

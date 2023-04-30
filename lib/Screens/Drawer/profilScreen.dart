@@ -144,20 +144,20 @@ class _MyWidgetState extends State<MyProfile> {
     }
   }
 
-  /*final degreeTypeList = [
+  final degreeTypeList = [
     "Engineer degree",
     "doctorate degree",
     "Master's degree",
     "Three year University degree",
     "other"
-  ];*/
-  /*final fieldStudytList = [
+  ];
+  final fieldStudytList = [
     "Technologie de l'Informatique",
     "gestion",
     "Science de l'informatique"
-  ];*/
-  //var experienceList = ["Sans experience", "entre 1 et 4ans", ">5ans"];
-  /* final skillsList = [
+  ];
+  var experienceList = ["Sans experience", "entre 1 et 4ans", ">5ans"];
+   final skillsList = [
     "Android",
     "flutter",
     "Kotlin",
@@ -170,7 +170,7 @@ class _MyWidgetState extends State<MyProfile> {
     "Symfony",
     "React-js",
     "WordPress"
-  ];*/
+  ];
   String? value;
   String? studyValue;
   bool isCompleted = false;
@@ -188,7 +188,7 @@ class _MyWidgetState extends State<MyProfile> {
   DateTime _selecteddate = DateTime.now();
   var selectedFieldsStudy;
   var selectedDegree;
-  var selectedExperience;
+ var selectedExperience;
   String? imageurl;
   void initState() {
     super.initState();
@@ -608,7 +608,7 @@ class _MyWidgetState extends State<MyProfile> {
                                 selectedFieldsStudy = studyValue;
                               });
                             },
-                            value: selectedFieldsStudy,
+                            value: selectedFieldsStudy as String?,
                             isExpanded: false,
                             hint: new Text(
                               " Your Fields Of Study",
@@ -687,7 +687,7 @@ class _MyWidgetState extends State<MyProfile> {
                                 selectedDegree = DegreeValue;
                               });
                             },
-                            value: selectedDegree,
+                            value: selectedDegree as String?,
                             isExpanded: false,
                             hint: new Text(
                               " Degree Of Study",
@@ -755,7 +755,7 @@ class _MyWidgetState extends State<MyProfile> {
                               Scaffold.of(context)
                                   .showBottomSheet((context) => snackBar);
                               setState(() {
-                                selectedExperience = ExperienceValue;
+                                selectedExperience = ExperienceValue as String?;
                               });
                             },
                             value: selectedExperience,
@@ -817,7 +817,7 @@ class _MyWidgetState extends State<MyProfile> {
                 height: 20,
               ),
               //**************languages********/
-              Container(
+              /*Container(
                 width: 700.0,
                 height: 100.0,
                 decoration: BoxDecoration(
@@ -828,14 +828,14 @@ class _MyWidgetState extends State<MyProfile> {
                   onPressed: _showMultiSelect,
                   child: Text('Languages'),
                 ),
-              ),
-              Wrap(
+              ),*/
+             /* Wrap(
                 children: _selectedItems
                     .map((e) => Chip(
                           label: Text(e),
                         ))
                     .toList(),
-              ),
+              ),*/
 
               SizedBox(
                 height: 20,
