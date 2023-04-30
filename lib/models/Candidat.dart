@@ -23,12 +23,13 @@ class _CandidatState extends State<Candidat> {
   var emaill;
   UserModel loggedInUser = UserModel();
   _CandidatState({required this.id});
-  final CollectionReference posts = FirebaseFirestore.instance.collection('posts');
+  final CollectionReference posts =
+      FirebaseFirestore.instance.collection('posts');
 
   @override
   void initState() {
     super.initState();
-    FirebaseFirestore.instance
+     FirebaseFirestore.instance
         .collection("users") //.where('uid', isEqualTo: user!.uid)
         .doc(id)
         .get()
@@ -42,6 +43,7 @@ class _CandidatState extends State<Candidat> {
         id = loggedInUser.uid.toString();
       });
     });
+    
   }
 
   Widget build(BuildContext context) {
@@ -51,7 +53,6 @@ class _CandidatState extends State<Candidat> {
           "Candidat",
         ),
         backgroundColor: kPrimaryColor,
-
         actions: [
           IconButton(
             onPressed: () {
@@ -60,10 +61,10 @@ class _CandidatState extends State<Candidat> {
             icon: Icon(Icons.logout),
           ),
         ],
-         leading: IconButton(
+        leading: IconButton(
           onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const DrawerCandidat()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const DrawerCandidat()));
             if (ZoomDrawer.of(context)!.isOpen()) {
               ZoomDrawer.of(context)!.close();
             } else {
@@ -76,84 +77,101 @@ class _CandidatState extends State<Candidat> {
           ),
         ),
       ),
-      body:  Center(
+      body: Center(
         child: StreamBuilder(
           stream: posts.orderBy(FieldPath.documentId).snapshots(),
-          builder:(context,AsyncSnapshot snapshot){
-            if(snapshot.hasData){
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
-                itemBuilder:(context,index){
-                  final DocumentSnapshot offerSnap =snapshot.data.docs[index];
+                itemBuilder: (context, index) {
+                  final DocumentSnapshot offerSnap = snapshot.data.docs[index];
                   return Column(
                     children: <Widget>[
                       InkWell(
-                      onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => detailsOffer(offerSnap:offerSnap)),
-                    );
-                  },
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-
-                        child: Container(
-                          height:150 ,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                              boxShadow:[
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 10,
-                                  spreadRadius: 15,
-
-                                ),]
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                    child: Image.network(offerSnap['images'],height:90,fit: BoxFit.cover ,width: 120,)
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    detailsOffer(offerSnap: offerSnap)),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            height: 150,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 10,
+                                    spreadRadius: 15,
+                                  ),
+                                ]),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                      child: Image.network(
+                                    offerSnap['images'],
+                                    height: 90,
+                                    fit: BoxFit.cover,
+                                    width: 120,
+                                  )),
                                 ),
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(offerSnap['offer name'],
-                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(offerSnap['salary'],
-                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                  Text(offerSnap['contrat'],
-                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                  Text(offerSnap['services'],
-                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                ],
-
-                              ),
-                              Row(
-                                children: [
-
-                                  IconButton(onPressed: (){
-                                  },
-                                    icon: Icon(Icons.favorite_border),
-                                    iconSize: 30,
-                                    color: Colors.red,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ) ,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      offerSnap['offer name'],
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      offerSnap['salary'],
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      offerSnap['contrat'],
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      offerSnap['services'],
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.favorite_border),
+                                      iconSize: 30,
+                                      color: Colors.red,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
                       ),
                     ],
                   );
-                },);
+                },
+              );
             }
             return Container();
           },

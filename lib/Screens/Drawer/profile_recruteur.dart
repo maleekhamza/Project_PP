@@ -21,23 +21,50 @@ class ProfileRecruteur extends StatefulWidget {
 }
 
 class _ProfileRecruteurState extends State<ProfileRecruteur> {
-  String? imageurl;
-  XFile? imgXFile;
-  final ImagePicker imagePicker = ImagePicker();
-  getImageFromGallery() async {
-    imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      imgXFile;
-    });
+  CollectionReference ref =
+      FirebaseFirestore.instance.collection('ProfileRecruteur');
+
+  Future<void> saveData() async {
+    final imageurl = await uploadImage(_image!);
+
+    final data = {
+      'image': imageurl,
+      'firstName': firstName.text,
+      'lastName': lastName.text,
+      'Email': email.text,
+    };
+    ref.add(data).then((value) => Navigator.pop(context));
   }
 
-  Future uploadImage(File imgXFile) async{
+  File? _image;
+
+  final picker = ImagePicker();
+  //late String downloadUrl;
+  Future imagePicker() async {
+    try {
+      final pick = await picker.pickImage(source: ImageSource.gallery);
+      setState(() {
+        if (pick != null) {
+          _image = File(pick.path);
+        } else {
+          print("no image selected");
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future uploadImage(File _image) async {
     String url;
-    String imgId=DateTime.now().microsecondsSinceEpoch.toString();
-  Reference reference=  FirebaseStorage.instance.ref().child('image').child('ProfileRecruteur$imgId');
-  await reference.putFile(imgXFile);
-  url=await reference.getDownloadURL();
-  return url;
+    String imgId = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance
+        .ref()
+        .child('images')
+        .child('ProfileRecruteur$imgId');
+    await reference.putFile(_image);
+    url = await reference.getDownloadURL();
+    return url;
   }
 
   final firstName = TextEditingController();
@@ -45,7 +72,6 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
   final date = TextEditingController();
   final phone = TextEditingController();
   final email = TextEditingController();
-  
 
   @override
   Widget build(BuildContext context) {
@@ -192,19 +218,7 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
         ));
   }
 
-  CollectionReference collRef =
-      FirebaseFirestore.instance.collection('ProfileRecruteur');
-  Future<void> saveData() async {
-    //final imageurl = await uploadImage(imgXFile! as File);
-
-    final data = {
-      'image': imageurl,
-      'firstName': firstName.text,
-      'lastName': lastName.text,
-      'Email': email.text,
-    };
-    collRef.add(data).then((value) => Navigator.pop(context));
-  }
+  
 
   Widget imageProfile() {
     return Center(
@@ -213,10 +227,10 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
           CircleAvatar(
               radius: 80.0,
               //backgroundImage: AssetImage("assets/images/profil.jpg"),
-              backgroundImage: imgXFile == null
+              backgroundImage: _image == null
                   ? null
                   : FileImage(
-                      File(imgXFile!.path),
+                      File(_image!.path),
                     )),
           Positioned(
             bottom: 20.0,
@@ -226,7 +240,7 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                 /*var context;
                 showModalBottomSheet(
                     context: context, builder: (context) => bottomSheet(context));*/
-                getImageFromGallery();
+                imagePicker();
               },
               child: Icon(Icons.camera_alt,
                   color: Color.fromARGB(255, 161, 91, 157), size: 28.0),
