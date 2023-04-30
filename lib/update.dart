@@ -39,6 +39,8 @@ class _UpdateOfferState extends State<UpdateOffer> {
   TextEditingController offerDescription = TextEditingController();
 
 
+
+
   Future imagePicker() async {
     try {
       final pick = await picker.pickImage(source: ImageSource.gallery);
@@ -71,7 +73,6 @@ class _UpdateOfferState extends State<UpdateOffer> {
       'services':SelectedServices,
        'Location':offerLocation.text,
       'Description':offerDescription.text,
-      'images':imageurl
     };
     offer.doc(docId).update(data).then((value) => Navigator.pop(context));
   }
@@ -87,6 +88,7 @@ class _UpdateOfferState extends State<UpdateOffer> {
     SelectedServices = args['services'];
     offerLocation.text=args['Location'];
     offerDescription.text=args['Description'];
+
     final docId = args['id'];
 
 
@@ -95,87 +97,145 @@ class _UpdateOfferState extends State<UpdateOffer> {
         title: Text("Update offers"),
         backgroundColor: kPrimaryColor,
       ),
-      body: SingleChildScrollView(
+      body:
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+              children: [
+                Container(
+                  width: 300,
+                  height: 350,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.grey)
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
 
-        child: Column(
+                          child: _image == null?
+                          Center(child: Text('no image selected')) :
+                          Image.file(
+                            _image! ,
+                            width: 300,
+                            height: 300,
+                            ),
+                        ),
 
-            children: [
-              Container(
-                width: 300,
-                height: 350,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey)
+                        MaterialButton(
+                          onPressed: () {
+                            imagePicker();
+                          },
+                          child: Text("selected image"),
+                          textColor: Colors.white,
+                          color: kPrimaryColor,
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                SizedBox(
+                    height: 20.0),
+                Padding(padding: const EdgeInsets.all(8.0),
+                  child:  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        child: _image == null?
-                        Center(child: Text('no image selected')) :
-                        Image.file(
-                          _image! ,
-                          width: 300,
-                          height: 300,
-                          ),
+                      Text(
+                        'Offer Name',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 18,
+                        ),
                       ),
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        controller: offerName,
+                        decoration: InputDecoration(
+                          hintText: 'Offer Name',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 14,
 
-                      MaterialButton(
-                        onPressed: () {
-                          imagePicker();
+                          ),
+                          filled: true, // ajouter un fond rempli de couleur
+                          fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
+                          border: OutlineInputBorder( // définir une bordure de rectangle
+                            borderRadius: BorderRadius.circular(8.0), // personnaliser le rayon des coins du rectangle
+                            borderSide: BorderSide.none, // supprimer la bordure de ligne
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the Offer Name !';
+                          }
+                          return null;
                         },
-                        child: Text("selected image"),
-                        textColor: Colors.white,
-                        color: kPrimaryColor,
-                      )
+                      ),
                     ],
                   ),
                 ),
-              ),
-        SizedBox(
-          height: 20.0),
-              Padding(padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: offerName,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("Offer Name")),
+                Padding(padding: const EdgeInsets.all(8.0),
+                  child:
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Salary',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        controller: offerSalary,
+                        decoration: InputDecoration(
+                          hintText: 'Salary',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 14,
+
+                          ),
+                          filled: true, // ajouter un fond rempli de couleur
+                          fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
+                          border: OutlineInputBorder( // définir une bordure de rectangle
+                            borderRadius: BorderRadius.circular(8.0), // personnaliser le rayon des coins du rectangle
+                            borderSide: BorderSide.none, // supprimer la bordure de ligne
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the Salary !';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: offerSalary,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("salary")),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        label: Text("Select Type Contrat")
-                    ),
-                    items: typeContrat
-                        .map((e) =>
-                        DropdownMenuItem(
-                          child: Text(e),
-                          value: e,
-                        ))
-                        .toList(),
-                    onChanged: (val) {
-                      SelectedContrat = val as String?;
-                    })
-              ),
-              Padding(
+    Padding(padding: const EdgeInsets.all(8.0),
+    child:
+    Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Text(
+    'Contrat',
+    style: TextStyle(
+    color: Colors.grey[700],
+    fontSize: 18,
+    ),
+    ),
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: DropdownButtonFormField(
-                      value: SelectedServices,
+                      value: SelectedContrat,
                       decoration: InputDecoration(
-                          label: Text("Select Service")
+                          label: Text("Select Type Contrat")
                       ),
-                      items: offerServices
+                      items: typeContrat
                           .map((e) =>
                           DropdownMenuItem(
                             child: Text(e),
@@ -183,44 +243,145 @@ class _UpdateOfferState extends State<UpdateOffer> {
                           ))
                           .toList(),
                       onChanged: (val) {
-                        SelectedServices = val as String?;
+                        SelectedContrat = val as String?;
                       })
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: offerLocation,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("Adress")),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: offerDescription,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), label: Text("Description")),
+    ],
+    ),
+    ),
+    Padding(padding: const EdgeInsets.all(8.0),
+    child:
+    Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Text(
+    'Service',
+    style: TextStyle(
+    color: Colors.grey[700],
+    fontSize: 18,
+    ),
+    ),
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonFormField(
+                        value: SelectedServices,
+                        decoration: InputDecoration(
+                            label: Text("Select Service")
+                        ),
+                        items: offerServices
+                            .map((e) =>
+                            DropdownMenuItem(
+                              child: Text(e),
+                              value: e,
+                            ))
+                            .toList(),
+                        onChanged: (val) {
+                          SelectedServices = val as String?;
+                        })
                 ),
-              ),
-              ElevatedButton(onPressed: () {
-                updateOffer(docId);
-              },
-                  style: ButtonStyle(
-                      minimumSize:
-                      MaterialStateProperty.all(Size(double.infinity, 50)),
-                      backgroundColor: MaterialStateProperty.all(
-                          kPrimaryColor)
+    ],
+    ),
+    ),
+                Padding(padding: const EdgeInsets.all(8.0),
+                  child:
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Location',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        controller: offerLocation,
+                        decoration: InputDecoration(
+                          hintText: 'Location',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 14,
+
+                          ),
+                          filled: true, // ajouter un fond rempli de couleur
+                          fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
+                          border: OutlineInputBorder( // définir une bordure de rectangle
+                            borderRadius: BorderRadius.circular(8.0), // personnaliser le rayon des coins du rectangle
+                            borderSide: BorderSide.none, // supprimer la bordure de ligne
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the Location !';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
                   ),
-                  child: Text("Update",
-                    style: TextStyle(fontSize: 20),
-                  )),
-              SizedBox(height: 12,),
+                ),
+                Padding(padding: const EdgeInsets.all(8.0),
+                  child:
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Description',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      // définir la hauteur souhaitée du TextFormField
+                      TextFormField(
+                        controller: offerDescription,
+                        decoration: InputDecoration(
 
-            ],
-          ),
+                          contentPadding: EdgeInsets.symmetric(vertical: 55.0), // définir la marge interne de la zone de saisie
+                          hintStyle: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 14,
+                          ),
+                          filled: true, // ajouter un fond rempli de couleur
+                          fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
+                          border: OutlineInputBorder( // définir une bordure de rectangle
+                            borderRadius: BorderRadius.circular(8.0), // personnaliser le rayon des coins du rectangle
+                            borderSide: BorderSide.none, // supprimer la bordure de ligne
+                          ),
+                        ),
+                        maxLines: null, // permet à l'utilisateur d'écrire autant de lignes qu'il souhaite
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the event description';
+                          }
+                          return null;
+                        },
+                      ),
+
+                    ],
+                  ),
+                ),
+                ElevatedButton(onPressed: () {
+                  updateOffer(docId);
+                },
+                    style: ButtonStyle(
+                        minimumSize:
+                        MaterialStateProperty.all(Size(double.infinity, 50)),
+                        backgroundColor: MaterialStateProperty.all(
+                            kPrimaryColor)
+                    ),
+                    child: Text("Update",
+                      style: TextStyle(fontSize: 20),
+                    )),
+                SizedBox(height: 12,),
+
+              ],
+            ),
         ),
-
-    );
+      )
+        );
   }
 
 

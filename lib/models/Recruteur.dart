@@ -14,17 +14,17 @@ class Recruteur extends StatefulWidget {
   String id;
   Recruteur({required this.id});
   @override
-  _RecruteurState createState() => _RecruteurState(id: id);
+  _RecruteurState createState() => _RecruteurState();
 }
 
 class _RecruteurState extends State<Recruteur> {
-  String id;
+  _RecruteurState();
+
   var rooll;
   var emaill;
   UserModel loggedInUser = UserModel();
-  _RecruteurState({required this.id});
   final CollectionReference posts =
-      FirebaseFirestore.instance.collection('posts');
+  FirebaseFirestore.instance.collection('posts');
 
   void deleteOffer(docId) {
     posts.doc(docId).delete();
@@ -38,13 +38,12 @@ class _RecruteurState extends State<Recruteur> {
         .doc(widget.id)
         .get()
         .then((value) {
-      this.loggedInUser = UserModel.fromMap(value.data());
+      loggedInUser = UserModel.fromMap(value.data());
     }).whenComplete(() {
-      CircularProgressIndicator();
+      const CircularProgressIndicator();
       setState(() {
         emaill = loggedInUser.email.toString();
         rooll = loggedInUser.wrool.toString();
-        id = loggedInUser.uid.toString();
       });
     });
   }
@@ -58,11 +57,11 @@ class _RecruteurState extends State<Recruteur> {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (_) => addnote()));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Recurteur",
         ),
         backgroundColor: kPrimaryColor,
@@ -71,10 +70,10 @@ class _RecruteurState extends State<Recruteur> {
             onPressed: () {
               logout(context);
             },
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
           ),
         ],
-         leading: IconButton(
+        leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const DrawerScreen()));
@@ -92,7 +91,7 @@ class _RecruteurState extends State<Recruteur> {
       ),
       body: Center(
         child: StreamBuilder(
-          stream: posts.snapshots(),
+          stream: posts.orderBy('timestamp', descending: true).snapshots(),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
@@ -116,7 +115,7 @@ class _RecruteurState extends State<Recruteur> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white,
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     color: Colors.grey,
                                     blurRadius: 10,
@@ -130,41 +129,76 @@ class _RecruteurState extends State<Recruteur> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
                                       child: Image.network(
-                                    offerSnap['images'],
-                                    height: 90,
-                                    fit: BoxFit.cover,
-                                    width: 120,
-                                  )),
+                                        offerSnap['images'],
+                                        height: 90,
+                                        fit: BoxFit.cover,
+                                        width: 120,
+                                      )),
                                 ),
+
+
                                 Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    SizedBox(height:10),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.work, color: Colors.grey,size: 17,),
+                                      SizedBox(width: 8.0),
+                                      Text(
+                                        offerSnap['offer name'],
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),),
+                                        ],
 
-                                    Text(
-                                      offerSnap['offer name'],
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
+                        ),
+                                    SizedBox(height:5),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.attach_money, color: Colors.grey,size: 17),
+                                        SizedBox(width: 8.0),
+                                        Text(
+                                          offerSnap['salary'],
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),),
+                                      ],
 
                                     ),
-                                    Text(
-                                      offerSnap['salary'],
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
+                                    SizedBox(height:5),
+
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.home_repair_service_sharp, color: Colors.grey,size: 17),
+                                        SizedBox(width: 8.0),
+                                        Text(
+                                          offerSnap['contrat'],
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),),
+                                      ],
+
                                     ),
-                                    Text(
-                                      offerSnap['contrat'],
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
+                                    SizedBox(height:5),
+
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.home_repair_service_sharp, color: Colors.grey,size: 17),
+                                        SizedBox(width: 8.0),
+                                        Text(
+                                          offerSnap['services'],
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),),
+                                      ],
+
                                     ),
-                                    Text(
-                                      offerSnap['services'],
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+
                                   ],
                                 ),
                                 Row(
@@ -178,13 +212,12 @@ class _RecruteurState extends State<Recruteur> {
                                               'contrat': offerSnap['contrat'],
                                               'services': offerSnap['services'],
                                               'images': offerSnap['images'],
-                                              'services': offerSnap['services'],
                                               'Location': offerSnap['Location'],
                                               'Description': offerSnap['Description'],
                                               'id': offerSnap.id,
                                             });
                                       },
-                                      icon: Icon(Icons.edit),
+                                      icon: const Icon(Icons.edit),
                                       iconSize: 30,
                                       color: Colors.blue,
                                     ),
@@ -192,7 +225,7 @@ class _RecruteurState extends State<Recruteur> {
                                       onPressed: () {
                                         deleteOffer(offerSnap.id);
                                       },
-                                      icon: Icon(Icons.delete),
+                                      icon: const Icon(Icons.delete),
                                       iconSize: 30,
                                       color: Colors.red,
                                     ),
@@ -216,12 +249,12 @@ class _RecruteurState extends State<Recruteur> {
   }
 
   Future<void> logout(BuildContext context) async {
-    CircularProgressIndicator();
+    const CircularProgressIndicator();
     await FirebaseAuth.instance.signOut();
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => LoginScreen(),
+        builder: (context) => const LoginScreen(),
       ),
     );
   }
