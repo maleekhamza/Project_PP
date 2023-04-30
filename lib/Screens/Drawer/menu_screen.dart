@@ -1,7 +1,7 @@
-
 import 'package:chercher_job/Screens/Drawer/profilScreen.dart';
 import 'package:chercher_job/Screens/Drawer/profile_recruteur.dart';
 import 'package:chercher_job/constants.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../constants.dart';
@@ -10,13 +10,20 @@ import 'notificationScreen.dart';
 import 'package:flutter/widgets.dart';
 
 class MenuScreen extends StatefulWidget {
+  
+  
+
   const MenuScreen({super.key});
+  
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
 }
 
 class _MenuScreenState extends State<MenuScreen> {
+ 
+ 
+   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +85,6 @@ class _MenuScreenState extends State<MenuScreen> {
                 thickness: 2,
                 color: Colors.white,
               ),
-             
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
@@ -94,9 +100,9 @@ class _MenuScreenState extends State<MenuScreen> {
                       )
                     ],
                   ),
-                   onTap: () {
+                  onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const NotificationScreen() ));
+                        builder: (context) => const NotificationScreen()));
                   },
                 ),
               ),
@@ -104,7 +110,6 @@ class _MenuScreenState extends State<MenuScreen> {
                 thickness: 2,
                 color: Colors.white,
               ),
-             
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
@@ -120,7 +125,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                     ],
                   ),
-                   onTap: () {
+                  onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const MyProfile()));
                   },

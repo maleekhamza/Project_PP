@@ -23,7 +23,6 @@ class MultiSelect extends StatefulWidget {
 }
 
 class _MultiSelectState extends State<MultiSelect> {
-  
   final List<String> _selectedItems = [];
 
   void _itemChange(String itemValue, bool isSelected) {
@@ -82,28 +81,76 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyProfile> {
+  CollectionReference ref =
+      FirebaseFirestore.instance.collection('ProfileCandidatS1');
+
+  Future<void> save() async {
+    final imageurl = await uploadImage(_image!);
+
+    final data = {
+      'images': imageurl,
+      'firstName': firstName.text,
+      'lastName': lastName.text,
+      'date': date.text,
+      'Email': email.text,
+      'phone': phone.text,
+    };
+    ref.add(data).then((value) => Navigator.pop(context));
+  }
+
+  File? _image;
+
+  final picker = ImagePicker();
+  //late String downloadUrl;
+  Future imagePicker() async {
+    try {
+      final pick = await picker.pickImage(source: ImageSource.gallery);
+      setState(() {
+        if (pick != null) {
+          _image = File(pick.path);
+        } else {
+          print("no image selected");
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future uploadImage(File _image) async {
+    String url;
+    String imgId = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance
+        .ref()
+        .child('images')
+        .child('ProfileCandidatS1$imgId');
+    await reference.putFile(_image);
+    url = await reference.getDownloadURL();
+    return url;
+  }
   //import image
-  XFile? imgXFile;
+
+  /*XFile? imgXFile;
   final ImagePicker imagePicker = ImagePicker();
   getImageFromGallery() async {
-    imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    final pick = await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      imgXFile;
+      imgXFile = XFile(pick!.path);
     });
   }
 
   Future uploadImage(File imgXFile) async {
-    String imageurl;
     String imgId = DateTime.now().microsecondsSinceEpoch.toString();
-    
+    String url;
     Reference reference = FirebaseStorage.instance
         .ref()
         .child('images')
         .child('ProfileCandidatS1$imgId');
     await reference.putFile(imgXFile);
-     imageurl = await reference.getDownloadURL();
-    return  imageurl;
-  }
+    url = await reference.getDownloadURL();
+    return url;
+    
+  }*/
 
   List<String> _selectedItems = [];
   //checkbox
@@ -224,15 +271,8 @@ class _MyWidgetState extends State<MyProfile> {
                       CollectionReference collection = FirebaseFirestore
                           .instance
                           .collection('ProfileCandidatS1');
-
-                      collection.add({
-                        'images': imageurl,
-                        'firstName': firstName.text,
-                        'lastName': lastName.text,
-                        'date': date.text,
-                        'Email': email.text,
-                        'phone': phone.text,
-                      });
+                      save();
+                      
                     } else if (currentStep == 1) {
                       CollectionReference collection = FirebaseFirestore
                           .instance
@@ -602,8 +642,8 @@ class _MyWidgetState extends State<MyProfile> {
                                   style: TextStyle(color: Colors.black),
                                 ),
                               );
-                              Scaffold.of(context)
-                                  .showBottomSheet((context) => snackBar);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                               setState(() {
                                 selectedFieldsStudy = studyValue;
                               });
@@ -676,13 +716,14 @@ class _MyWidgetState extends State<MyProfile> {
                             items: DegreeItems,
                             onChanged: (DegreeValue) {
                               final snackBar = SnackBar(
+                              
                                 content: Text(
                                   'Selected Degree Of Study value is $DegreeValue',
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.grey),
                                 ),
                               );
-                              Scaffold.of(context)
-                                  .showBottomSheet((context) => snackBar);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                               setState(() {
                                 selectedDegree = DegreeValue;
                               });
@@ -752,8 +793,8 @@ class _MyWidgetState extends State<MyProfile> {
                                   style: TextStyle(color: Colors.black),
                                 ),
                               );
-                              Scaffold.of(context)
-                                  .showBottomSheet((context) => snackBar);
+                               ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                               setState(() {
                                 selectedExperience = ExperienceValue as String?;
                               });
@@ -908,13 +949,14 @@ class _MyWidgetState extends State<MyProfile> {
       child: Stack(
         children: <Widget>[
           CircleAvatar(
-              radius: 80.0,
-              //backgroundImage: AssetImage("assets/images/profil.jpg"),
-              backgroundImage: imgXFile == null
-                  ? null
-                  : FileImage(
-                      File(imgXFile!.path),
-                    )),
+            radius: 80.0,
+            //backgroundImage: AssetImage("assets/images/profil.jpg"),
+            backgroundImage: _image == null
+                ? null
+                : FileImage(
+                    File(_image!.path),
+                  ),
+          ),
           Positioned(
             bottom: 20.0,
             right: 20.0,
@@ -923,7 +965,7 @@ class _MyWidgetState extends State<MyProfile> {
                 /*var context;
                 showModalBottomSheet(
                     context: context, builder: (context) => bottomSheet(context));*/
-                getImageFromGallery();
+                imagePicker();
               },
               child: Icon(Icons.camera_alt,
                   color: Color.fromARGB(255, 161, 91, 157), size: 28.0),
