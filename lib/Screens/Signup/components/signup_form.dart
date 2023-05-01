@@ -92,20 +92,6 @@ class _SignUpFormState extends State<SignUpForm> {
               onChanged: (value) {},
             ),
           ),
-          const SizedBox(height: defaultPadding / 2),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                showProgress = true;
-              });
-              signUp(emailController.text,
-                  passwordController.text, rool);
-            },
-            child: Text("Sign Up".toUpperCase()),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -146,6 +132,21 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
             ],
           ),
+          const SizedBox(height: defaultPadding / 2),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                showProgress = true;
+              });
+              signUp(emailController.text,
+                  passwordController.text, rool);
+            },
+            child: Text("Sign Up".toUpperCase()),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+
           const SizedBox(height: defaultPadding),
           AlreadyHaveAnAccountCheck(
             login: false,
