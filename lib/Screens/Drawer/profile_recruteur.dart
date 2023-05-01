@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:chercher_job/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,6 +22,61 @@ class ProfileRecruteur extends StatefulWidget {
 }
 
 class _ProfileRecruteurState extends State<ProfileRecruteur> {
+  var firstName = TextEditingController();
+  var lastName = TextEditingController();
+  final date = TextEditingController();
+  final phone = TextEditingController();
+  late TextEditingController email = TextEditingController();
+//fetch data from login
+  final user = FirebaseAuth.instance.currentUser;
+  final CollectionReference usersRef =
+      FirebaseFirestore.instance.collection("users");
+
+  void fetchUserData() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
+      Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+      if (userData != null) {
+        setState(() {
+          // name = userData['name'];
+          email = userData['email'];
+          // imageUrl = userData['imageUrl'];
+        });
+      }
+    }
+  }
+
+  //fetch data from profil
+  final userProfil = FirebaseAuth.instance.currentUser;
+  final CollectionReference usersReference =
+      FirebaseFirestore.instance.collection("ProfileRecruteur");
+
+  String image = '';
+
+  void fetchProfilData() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      DocumentSnapshot userDoc =
+          await usersReference.doc(currentUser.uid).get();
+      Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+      if (userData != null) {
+        setState(() {
+          image = userData['image'];
+          firstName = userData['fisrtName'];
+          lastName = userData['lastName'];
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+    fetchProfilData();
+  }
+
   CollectionReference ref =
       FirebaseFirestore.instance.collection('ProfileRecruteur');
 
@@ -35,7 +91,6 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
     };
     ref.add(data).then((value) => Navigator.pop(context));
   }
-  
 
   File? _image;
 
@@ -67,13 +122,6 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
     url = await reference.getDownloadURL();
     return url;
   }
-
-
-  final firstName = TextEditingController();
-  final lastName = TextEditingController();
-  final date = TextEditingController();
-  final phone = TextEditingController();
-  final email = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +160,7 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                     ),
                     prefixIcon: Icon(Icons.person),
                     labelText: 'first name',
+                    
                     labelStyle: TextStyle(
                       color: Color(0xFF6F35A5),
                     ),
@@ -144,6 +193,7 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                     ),
                     prefixIcon: Icon(Icons.person),
                     labelText: 'last name',
+                    hintText: lastName.text,
                     labelStyle: TextStyle(
                       color: Color(0xFF6F35A5),
                     ),
@@ -177,9 +227,10 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     prefixIcon: Icon(Icons.email_rounded),
-                    labelText: 'Your Email',
+                    labelText:(user?.email ?? '') ,
+                    
                     labelStyle: TextStyle(
-                      color: Color(0xFF6F35A5),
+                      color: Color.fromARGB(255, 156, 153, 159),
                     ),
                     filled: true,
                   ),
@@ -203,15 +254,12 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                     onPressed: () {
                       saveData();
                     },
-                    
                     child: Text("Save")),
               ],
             ),
           ),
         ));
   }
-
-  
 
   Widget imageProfile() {
     return Center(
@@ -243,38 +291,38 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
       ),
     );
   }
-}
 
-Widget bottomSheet() {
-  return Container(
-    height: 100.0,
-    width: 30,
-    margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-    child: Column(
-      children: <Widget>[
-        Text(
-          "choose a profile photo",
-          style: TextStyle(fontSize: 20.0),
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextButton.icon(
-              icon: Icon(Icons.camera),
-              onPressed: () {},
-              label: Text('Camera'),
-            ),
-            TextButton.icon(
-              icon: Icon(Icons.image),
-              onPressed: () {},
-              label: Text('Gallery'),
-            ),
-          ],
-        )
-      ],
-    ),
-  );
+  Widget bottomSheet() {
+    return Container(
+      height: 100.0,
+      width: 30,
+      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "choose a profile photo",
+            style: TextStyle(fontSize: 20.0),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton.icon(
+                icon: Icon(Icons.camera),
+                onPressed: () {},
+                label: Text('Camera'),
+              ),
+              TextButton.icon(
+                icon: Icon(Icons.image),
+                onPressed: () {},
+                label: Text('Gallery'),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
 }
