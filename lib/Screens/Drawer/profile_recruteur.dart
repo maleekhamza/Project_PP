@@ -26,7 +26,7 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
   var lastName = TextEditingController();
   final date = TextEditingController();
   final phone = TextEditingController();
-  late TextEditingController email = TextEditingController();
+  late TextEditingController email = TextEditingController(text: user?.email ?? '');
 //fetch data from login
   final user = FirebaseAuth.instance.currentUser;
   final CollectionReference usersRef =
@@ -229,7 +229,6 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                     ),
                     prefixIcon: Icon(Icons.email_rounded),
                     labelText:(user?.email ?? '') ,
-                    
                     labelStyle: TextStyle(
                       color: Color.fromARGB(255, 156, 153, 159),
                     ),
