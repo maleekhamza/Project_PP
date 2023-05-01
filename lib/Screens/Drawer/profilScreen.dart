@@ -83,7 +83,32 @@ class MyProfile extends StatefulWidget {
 
 class _MyWidgetState extends State<MyProfile> {
 
+//fetch data
+final user = FirebaseAuth.instance.currentUser;
+  final CollectionReference usersRef =
+      FirebaseFirestore.instance.collection("users");
 
+  void fetchUserData() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
+      Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+      if (userData != null) {
+        setState(() {
+          // name = userData['name'];
+          email = userData['email'];
+          // imageUrl = userData['imageUrl'];
+        });
+      }
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+   
+  }
+  
   CollectionReference ref =
       FirebaseFirestore.instance.collection('ProfileCandidatS1');
 
@@ -209,7 +234,7 @@ class _MyWidgetState extends State<MyProfile> {
   final NameofUniversity = TextEditingController();
   final Certification = TextEditingController();
   final phone = TextEditingController();
-  final email = TextEditingController();
+   late TextEditingController email = TextEditingController(text: user?.email ?? '');
   final Languages = TextEditingController();
   final CentreOfInterest = TextEditingController();
   DateTime _selecteddate = DateTime.now();
@@ -217,11 +242,13 @@ class _MyWidgetState extends State<MyProfile> {
   var selectedDegree;
   var selectedExperience;
   String? imageurl;
+
+  /*@override
   void initState() {
     super.initState();
     date.text = '';
   }
-
+*/
   get formKey => null;
   @override
   Widget build(BuildContext context) {
@@ -473,7 +500,7 @@ class _MyWidgetState extends State<MyProfile> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   prefixIcon: Icon(Icons.email_rounded),
-                  labelText: 'Your Email',
+                  labelText: (user?.email ?? ''),
                   labelStyle: TextStyle(
                     color: Color(0xFF6F35A5),
                   ),
