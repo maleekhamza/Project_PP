@@ -21,6 +21,7 @@ class ProfileRecruteur extends StatefulWidget {
 }
 
 class _ProfileRecruteurState extends State<ProfileRecruteur> {
+
   CollectionReference ref =
       FirebaseFirestore.instance.collection('ProfileRecruteur');
 

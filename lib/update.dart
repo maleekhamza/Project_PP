@@ -36,7 +36,7 @@ class _UpdateOfferState extends State<UpdateOffer> {
   TextEditingController offerSalary = TextEditingController();
   TextEditingController offerLocation = TextEditingController();
   TextEditingController offerDescription = TextEditingController();
-
+  late String imageurl;
 
 
 
@@ -72,6 +72,7 @@ class _UpdateOfferState extends State<UpdateOffer> {
       'services':SelectedServices,
        'Location':offerLocation.text,
       'Description':offerDescription.text,
+      'images':imageurl
     };
     offer.doc(docId).update(data).then((value) => Navigator.pop(context));
   }
@@ -87,7 +88,7 @@ class _UpdateOfferState extends State<UpdateOffer> {
     SelectedServices = args['services'];
     offerLocation.text=args['Location'];
     offerDescription.text=args['Description'];
-
+    imageurl=args['images'];
     final docId = args['id'];
 
 
@@ -114,14 +115,17 @@ class _UpdateOfferState extends State<UpdateOffer> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-
-                          child: _image == null?
+                          child: imageurl == null?
                           Center(child: Text('no image selected')) :
-                          Image.file(
-                            _image! ,
+                        _image==null? Image.network(
+                            imageurl ,
                             width: 300,
                             height: 300,
-                            ),
+                            ):Image.file(
+                          _image! ,
+                          width: 300,
+                          height: 300,
+                        ),
                         ),
 
                         MaterialButton(
