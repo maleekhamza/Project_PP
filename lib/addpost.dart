@@ -37,7 +37,6 @@ class _addnoteState extends State<addnote> {
   String ? SelectedServices;
   String ? SelectedContrat;
 
-  // build the path dynamically
 
   CollectionReference ref = FirebaseFirestore.instance.collection('posts');
 
@@ -201,6 +200,7 @@ class _addnoteState extends State<addnote> {
                           borderSide: BorderSide.none, // supprimer la bordure de ligne
                         ),
                       ),
+                      keyboardType: TextInputType.phone,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter the Salary !';

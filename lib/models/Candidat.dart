@@ -116,25 +116,76 @@ class _CandidatState extends State<Candidat> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                      child: Image.network(offerSnap['images'],height:90,fit: BoxFit.cover ,width: 120,)
+                                      child: Image.network(offerSnap['images'],height:150,fit: BoxFit.cover ,width: 120,)
                                   ),
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(offerSnap['offer name'],
-                                      style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(offerSnap['salary'],
-                                      style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                    Text(offerSnap['contrat'],
-                                      style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                    Text(offerSnap['services'],
-                                      style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                  ],
+                  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  SizedBox(height:10),
+                  Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                  Icon(Icons.work, color: Colors.grey,size: 17,),
+                  SizedBox(width: 8.0),
+                  Text(
+                  offerSnap['offer name'],
+                  style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),),
+                  ],
 
-                                ),
+                  ),
+                  SizedBox(height:5),
+                  Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                  Icon(Icons.attach_money, color: Colors.grey,size: 17),
+                  SizedBox(width: 8.0),
+                  Text(
+                  offerSnap['salary'],
+                  style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),),
+                  ],
+
+                  ),
+                  SizedBox(height:5),
+
+                  Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                  Icon(Icons.home_repair_service_sharp, color: Colors.grey,size: 17),
+                  SizedBox(width: 8.0),
+                  Text(
+                  offerSnap['contrat'],
+                  style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),),
+                  ],
+
+                  ),
+                  SizedBox(height:5),
+
+                  Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                  Icon(Icons.home_repair_service_sharp, color: Colors.grey,size: 17),
+                  SizedBox(width: 8.0),
+                  Text(
+                  offerSnap['services'],
+                  style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),),
+                  ],
+
+                  ),
+
+                  ],
+                  ),
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+
                                   children: [
 
                                     IconButton(onPressed: (){
