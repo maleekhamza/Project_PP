@@ -1,6 +1,9 @@
 import 'package:chercher_job/Screens/Drawer/profilScreen.dart';
 import 'package:chercher_job/Screens/Drawer/profile_recruteur.dart';
 import 'package:chercher_job/constants.dart';
+import 'package:chercher_job/models/Candidat.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
@@ -21,8 +24,33 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
- 
- 
+ final user = FirebaseAuth.instance.currentUser;
+  final CollectionReference usersRef =
+      FirebaseFirestore.instance.collection("users");
+  String name = '';
+  String email = '';
+  String imageUrl = '';
+
+  void fetchUserData() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
+      Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+      if (userData != null) {
+        setState(() {
+          name = userData['name'];
+          email = userData['email'];
+         
+        });
+      }
+    }
+  }
+ @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
    
   @override
   Widget build(BuildContext context) {
@@ -49,12 +77,9 @@ class _MenuScreenState extends State<MenuScreen> {
                     SizedBox(
                       height: 12,
                     ),
+                    
                     Text(
-                      "surname",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                    Text(
-                      "surname@gmail.com",
+                     (user?.email ?? ''),
                       style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
                   ],
@@ -77,7 +102,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const MainScreen()));
+                        builder: (context) => const Candidat(id: 'id')));
                   },
                 ),
               ),

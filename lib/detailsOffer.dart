@@ -281,7 +281,10 @@ class detailsOffer extends StatelessWidget {
                       showModalBottomSheet(
                       context: context,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(30)
+                        ),
+                      
+                        
                       ),
                       builder:(BuildContext context){
                         return

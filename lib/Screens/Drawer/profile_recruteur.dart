@@ -35,6 +35,7 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
     };
     ref.add(data).then((value) => Navigator.pop(context));
   }
+  
 
   File? _image;
 
@@ -66,6 +67,7 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
     url = await reference.getDownloadURL();
     return url;
   }
+
 
   final firstName = TextEditingController();
   final lastName = TextEditingController();
@@ -201,16 +203,7 @@ class _ProfileRecruteurState extends State<ProfileRecruteur> {
                     onPressed: () {
                       saveData();
                     },
-                    /*async {
-                      CollectionReference collRef = FirebaseFirestore.instance
-                          .collection('ProfileRecruteur');
-                      collRef.add({
-                        'image': imageurl,
-                        'firstName': firstName.text,
-                        'lastName': lastName.text,
-                        'Email': email.text,
-                      });
-                    },*/
+                    
                     child: Text("Save")),
               ],
             ),

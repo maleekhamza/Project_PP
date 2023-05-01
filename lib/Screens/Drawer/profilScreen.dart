@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,8 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyProfile> {
+
+
   CollectionReference ref =
       FirebaseFirestore.instance.collection('ProfileCandidatS1');
 
@@ -128,29 +131,6 @@ class _MyWidgetState extends State<MyProfile> {
     url = await reference.getDownloadURL();
     return url;
   }
-  //import image
-
-  /*XFile? imgXFile;
-  final ImagePicker imagePicker = ImagePicker();
-  getImageFromGallery() async {
-    final pick = await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      imgXFile = XFile(pick!.path);
-    });
-  }
-
-  Future uploadImage(File imgXFile) async {
-    String imgId = DateTime.now().microsecondsSinceEpoch.toString();
-    String url;
-    Reference reference = FirebaseStorage.instance
-        .ref()
-        .child('images')
-        .child('ProfileCandidatS1$imgId');
-    await reference.putFile(imgXFile);
-    url = await reference.getDownloadURL();
-    return url;
-    
-  }*/
 
   List<String> _selectedItems = [];
   //checkbox
@@ -170,7 +150,7 @@ class _MyWidgetState extends State<MyProfile> {
     }
   }
 
-  void _showSkillSelect() async {
+   _showSkillSelect() async {
     final List<String> Skillitems = [
       'Android',
       'Flutter',
@@ -204,7 +184,7 @@ class _MyWidgetState extends State<MyProfile> {
     "Science de l'informatique"
   ];
   var experienceList = ["Sans experience", "entre 1 et 4ans", ">5ans"];
-   final skillsList = [
+  final skillsList = [
     "Android",
     "flutter",
     "Kotlin",
@@ -235,7 +215,7 @@ class _MyWidgetState extends State<MyProfile> {
   DateTime _selecteddate = DateTime.now();
   var selectedFieldsStudy;
   var selectedDegree;
- var selectedExperience;
+  var selectedExperience;
   String? imageurl;
   void initState() {
     super.initState();
@@ -272,7 +252,6 @@ class _MyWidgetState extends State<MyProfile> {
                           .instance
                           .collection('ProfileCandidatS1');
                       save();
-                      
                     } else if (currentStep == 1) {
                       CollectionReference collection = FirebaseFirestore
                           .instance
@@ -289,8 +268,8 @@ class _MyWidgetState extends State<MyProfile> {
                           .collection('ProfileCandidatS3');
                       collection.add({
                         'experience': selectedExperience,
+                        
                         'certification': Certification.text,
-                        'language': Languages.text,
                         'centreofInterest': CentreOfInterest.text,
                       });
                     }
@@ -716,7 +695,6 @@ class _MyWidgetState extends State<MyProfile> {
                             items: DegreeItems,
                             onChanged: (DegreeValue) {
                               final snackBar = SnackBar(
-                              
                                 content: Text(
                                   'Selected Degree Of Study value is $DegreeValue',
                                   style: TextStyle(color: Colors.grey),
@@ -793,7 +771,7 @@ class _MyWidgetState extends State<MyProfile> {
                                   style: TextStyle(color: Colors.black),
                                 ),
                               );
-                               ScaffoldMessenger.of(context)
+                              ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               setState(() {
                                 selectedExperience = ExperienceValue as String?;
@@ -870,7 +848,7 @@ class _MyWidgetState extends State<MyProfile> {
                   child: Text('Languages'),
                 ),
               ),*/
-             /* Wrap(
+              /* Wrap(
                 children: _selectedItems
                     .map((e) => Chip(
                           label: Text(e),
