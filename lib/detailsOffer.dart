@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chercher_job/Screens/Drawer/profilScreen.dart';
 import 'package:chercher_job/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,11 +7,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'ApplyPage.dart';
+
 class detailsOffer extends StatelessWidget {
   final DocumentSnapshot offerSnap;
 
   detailsOffer({Key? key, required this.offerSnap}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -268,90 +271,76 @@ class detailsOffer extends StatelessWidget {
                 ),
                 Divider(thickness: 2,),
                 Container(
-
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Color.fromARGB(255, 228, 211, 236)
                   ),
                   padding: EdgeInsets.all(32),
                   child: ElevatedButton(
-                  child: Text("I'm Interested"),
-                    onPressed: ()  {
-
-                      showModalBottomSheet(
-                      context: context,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                      ),
-                      builder:(BuildContext context){
-                        return
-                          ListView.builder(
-                            itemCount: 1,
-                            itemBuilder: (context, index){
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Container(
-                                      height: 250,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: Color.fromARGB(255, 228, 211, 236)
-                                      ),
-                                      child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            width: 300.0,
-                                            height: 100.0,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(20),
-                                                color: Color.fromARGB(255, 228, 211, 236)
-                                            ),
-                                            padding: EdgeInsets.all(32),
-                                            child: ElevatedButton(
-                                              onPressed: () async {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return MyProfile();
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                              child: Text("Complete your profile"),
-                                            ),
-                                          ),
-                                          SizedBox(height: 20,),
-                                          Container(
-                                            width: 300.0,
-                                            height: 100.0,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(20),
-                                                color: Color.fromARGB(255, 228, 211, 236)
-                                            ),
-                                            padding: EdgeInsets.all(32),
-                                            child: ElevatedButton(
-                                              onPressed: () async {
-                                                final result = await FilePicker.platform.pickFiles();
-                                                if (result != null) return;
-                                              },
-                                              child: Text("Import Your CV"),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                  )
-                                ],
-                              );
-                            },
+                      child: Text("I'm Interested"),
+                      onPressed: ()  {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                          ),
+                          builder: (BuildContext context) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  height: 350,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Color.fromARGB(255, 228, 211, 236)),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: 3,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        width: 300.0,
+                                        height: 100.0,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: Color.fromARGB(255, 228, 211, 236)),
+                                        padding: EdgeInsets.all(32),
+                                        child: ElevatedButton(
+                                          onPressed: () async {
+                                            if (index == 0) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) {
+                                                  return MyProfile();
+                                                }),
+                                              );
+                                            } else if (index == 1) {
+                                              final result =
+                                              await FilePicker.platform.pickFiles();
+                                              if (result != null) return;
+                                            } else if (index == 2) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) {
+                                                  return ApplyPage();
+                                                }),
+                                              );
+                                            }
+                                          },
+                                          child: Text(index == 0
+                                              ? "Complete your profile"
+                                              : index == 1
+                                              ? "Import Your CV"
+                                              : "Apply"),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         );
-                      },
-                 );
-               }
+                      }
                   ),
                 ),
             ],
